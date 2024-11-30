@@ -1,0 +1,45 @@
+{% extends 'layouts/box.html' %}
+
+{% block content %}
+  
+<h1>New Group Chat</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_groupchat_name">Group Chat Name</label>
+        {{ form.groupchat_name }}
+    </div>
+
+    <div class="form-group">
+        <label for="id_description">Description</label>
+        {{ form.description }}
+    </div>
+
+    <div class="form-group">
+        <label for="id_members">Select Members</label>
+        <div>
+            {% for friend in form.fields.members.queryset %}
+                <div class="flex items-center gap-2 py-2">
+                    <input
+                        type="checkbox"
+                        name="members"
+                        value="{{ friend.id }}"
+                        id="member_{{ friend.id }}"
+                        class="cursor-pointer w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <label for="member_{{ friend.id }}" class="text-gray-700">
+                        {{ friend.profile.name|default:friend.username }}
+                    </label>
+                </div>
+            {% empty %}
+                <p>No friends available to add to the group.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded">
+        Create Group
+    </button>
+</form>
+{% endblock %}

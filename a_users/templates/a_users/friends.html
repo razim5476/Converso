@@ -1,0 +1,32 @@
+{% extends 'layouts/blank.html' %}
+
+{% block content %}
+<div class="max-w-lg mx-auto flex flex-col items-center pt-20 px-4">
+    <h1 class="text-xl font-semibold">Your Friends</h1>
+    <div class="mt-8">
+        {% if friends %}
+            <ul>
+                {% for friend in friends %}
+                    <li class="flex items-center mt-4">
+                        <!-- Clickable Avatar -->
+                        <a href="{% url 'profile' friend.username %}">
+                            <img class="w-12 h-12 rounded-full object-cover" src="{{ friend.profile.avatar }}" alt="{{ friend.username }}">
+                        </a>
+                        <div class="ml-4">
+                            <!-- Clickable Name -->
+                            <h2>
+                                <a href="{% url 'profile' friend.username %}" class="text-blue-500 hover:underline">
+                                    {{ friend.profile.name }}
+                                </a>
+                            </h2>
+                            <div class="text-gray-400">@{{ friend.username }}</div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no friends yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+<h2 class="text-lg font-bold text-center mb-4">Invitation Sent</h2>
+<p class="text-center">
+    An invitation has been sent to <strong>{{ email }}</strong> to join the group 
+    <strong>{{ group.groupchat_name }}</strong>.
+</p>
+<div class="text-center mt-4">
+    <a href="{% url 'chatroom' chatroom_name=group.group_name %}" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        Go Back to Group Chat
+    </a>
+</div>

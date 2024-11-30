@@ -1,0 +1,36 @@
+{% extends 'layouts/blank.html' %}
+
+{% block content %}
+
+<div class="max-w-lg mx-auto flex flex-col items-center pt-20 px-4">
+    <img class="w-36 h-36 rounded-full object-cover mb-4" src="{{ profile.avatar }}" />
+    <div class="text-center">
+        <h1>{{ profile.name }}</h1>
+        <div class="text-gray-400 mb-2 -mt-3">@{{ profile.user.username }}</div>
+        {% if profile.info %}
+        <div class="mt-8 hyphens-auto">{{ profile.info|linebreaksbr }}</div>
+        {% endif %}  
+
+        {% if profile.user != user %}
+        <a class="button" href="{% url 'start-chat' profile.user.username %}">Chat with me</a>
+
+        <!-- Add Friend Button -->
+        <div class="mt-4"> <!-- Add some margin to space it from the chat button -->
+            {% if not profile.user in request.user.profile.friends.all %}
+                {% if not profile.user in request.user.profile.received_requests.all %}
+                    <form method="POST" action="{% url 'send-friend-request' profile.user.username %}" class="text-center">
+                        {% csrf_token %}
+                        <button type="submit" class="button">Add Friend</button>
+                    </form>
+                {% else %}
+                    <span class="text-gray-500">Friend request pending</span>
+                {% endif %}
+            {% else %}
+                <span class="text-gray-500">You are already friends.</span>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

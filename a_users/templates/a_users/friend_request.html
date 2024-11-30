@@ -1,0 +1,124 @@
+{% extends 'layouts/blank.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto pt-16 px-4">
+    <h1 class="text-3xl font-bold mb-8 text-gray-800 dark:text-gray-100">Friend Requests</h1>
+
+    <!-- Pending Requests -->
+    <section class="mb-12">
+        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Pending Requests</h2>
+        {% if pending_requests %}
+            <ul class="space-y-6">
+                {% for request in pending_requests %}
+                    <li class="flex items-center justify-between bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md p-4">
+                        <div class="flex items-center gap-4">
+                            <img class="w-14 h-14 rounded-full object-cover" 
+                                {% if request.receiver == request.user %}
+                                    src="{{ request.sender.profile.avatar }}"
+                                    alt="{{ request.sender.username }}"
+                                {% else %}
+                                    src="{{ request.receiver.profile.avatar }}"
+                                    alt="{{ request.receiver.username }}"
+                                {% endif %}
+                            >
+                            <div>
+                                {% if request.receiver == request.user %}
+                                    <p class="font-medium text-gray-800 dark:text-gray-100">{{ request.sender.profile.name }}</p>
+                                    <p class="text-gray-500">@{{ request.sender.username }}</p>
+                                {% else %}
+                                    <p class="font-medium text-gray-800 dark:text-gray-100">{{ request.receiver.profile.name }}</p>
+                                    <p class="text-gray-500">@{{ request.receiver.username }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <form method="POST" action="{% url 'accept-friend-request' request.sender.username %}">
+                                {% csrf_token %}
+                                <button type="submit" 
+                                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300">
+                                    Accept
+                                </button>
+                            </form>
+                            <form method="POST" action="{% url 'reject-friend-request' request.sender.username %}">
+                                {% csrf_token %}
+                                <button type="submit" 
+                                    class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300">
+                                    Reject
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 dark:text-gray-400">No pending requests.</p>
+        {% endif %}
+    </section>
+
+    <!-- Accepted Requests -->
+    <section class="mb-12">
+        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Accepted Friends</h2>
+        {% if accepted_requests %}
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for request in accepted_requests %}
+                    <li class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md p-4">
+                        <img class="w-14 h-14 rounded-full object-cover" 
+                            {% if request.receiver == request.user %}
+                                src="{{ request.sender.profile.avatar }}"
+                                alt="{{ request.sender.username }}"
+                            {% else %}
+                                src="{{ request.receiver.profile.avatar }}"
+                                alt="{{ request.receiver.username }}"
+                            {% endif %}
+                        >
+                        <div class="ml-4">
+                            {% if request.receiver == request.user %}
+                                <p class="font-medium text-gray-800 dark:text-gray-100">{{ request.sender.profile.name }}</p>
+                                <p class="text-gray-500">@{{ request.sender.username }}</p>
+                            {% else %}
+                                <p class="font-medium text-gray-800 dark:text-gray-100">{{ request.receiver.profile.name }}</p>
+                                <p class="text-gray-500">@{{ request.receiver.username }}</p>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 dark:text-gray-400">No accepted friends.</p>
+        {% endif %}
+    </section>
+
+    <!-- Rejected Requests -->
+    <section>
+        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Rejected Requests</h2>
+        {% if rejected_requests %}
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for request in rejected_requests %}
+                    <li class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md p-4">
+                        <img class="w-14 h-14 rounded-full object-cover" 
+                            {% if request.receiver == request.user %}
+                                src="{{ request.sender.profile.avatar }}"
+                                alt="{{ request.sender.username }}"
+                            {% else %}
+                                src="{{ request.receiver.profile.avatar }}"
+                                alt="{{ request.receiver.username }}"
+                            {% endif %}
+                        >
+                        <div class="ml-4">
+                            {% if request.receiver == request.user %}
+                                <p class="font-medium text-gray-800 dark:text-gray-100">{{ request.sender.profile.name }}</p>
+                                <p class="text-gray-500">@{{ request.sender.username }}</p>
+                            {% else %}
+                                <p class="font-medium text-gray-800 dark:text-gray-100">{{ request.receiver.profile.name }}</p>
+                                <p class="text-gray-500">@{{ request.receiver.username }}</p>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 dark:text-gray-400">No rejected requests.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+<style>
+    #notifications {
+        z-index: 50;
+    }
+    #notifications div {
+        border-bottom: 1px solid #e2e8f0; /* Light gray border */
+        padding: 8px;
+    }
+</style>    
+
+<div id="notifications" class="absolute top-16 right-8 w-96 bg-white shadow-lg rounded-lg p-4 hidden">
+    <!-- Notifications will be dynamically loaded here -->
+</div>
+
+<script>
+    // Utility function to get the CSRF token from the browser's cookies
+    function getCSRFToken() {
+        const name = 'csrftoken'; // The default name of the CSRF token cookie in Django
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+            return parts.pop().split(';').shift();  // Return the CSRF token
+        }
+        return null;  // If no CSRF token is found
+    }
+
+    function markAsRead(notificationId) {
+        const csrftoken = getCSRFToken();
+    
+        fetch(`/videocall/notifications/mark-as-read/${notificationId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,  // CSRF token for protection
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: notificationId })  // Optional body data
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                console.log('Notification marked as read');
+                fetchNotifications();  // Refresh notifications after marking as read
+            } else {
+                console.log('Error:', data.message);
+            }
+        })
+        .catch(error => console.error('Error marking notification as read:', error));
+    }
+    
+    
+    
+
+    
+
+    function fetchNotifications() {
+        fetch('/videocall/notifications/')  // Adjust this URL if your endpoint differs
+            .then(response => response.json())
+            .then(data => {
+                const notificationsDiv = document.getElementById('notifications');
+                notificationsDiv.innerHTML = '';  // Clear previous notifications
+                if (data.notifications.length > 0) {
+                    notificationsDiv.classList.remove('hidden');
+                    data.notifications.forEach(notification => {
+                        const notificationItem = document.createElement('div');
+                        notificationItem.textContent = notification.message;
+                        notificationItem.classList.add('p-2', 'border-b', 'last:border-b-0');
+                        notificationsDiv.appendChild(notificationItem);
+
+                        // Add the 'Mark as Read' button for each notification
+                        const markAsReadButton = document.createElement('button');
+                        markAsReadButton.textContent = 'Mark as Read';
+                        markAsReadButton.onclick = () => markAsRead(notification.id);
+                        notificationItem.appendChild(markAsReadButton);
+                    });
+                } else {
+                    notificationsDiv.classList.add('hidden'); // Hide if no notifications
+                }
+            })
+            .catch(error => console.error('Error fetching notifications:', error));
+    }
+
+    // Fetch notifications on page load
+    fetchNotifications();
+
+    // Optionally, refresh notifications periodically
+    setInterval(fetchNotifications, 5000); // Every 60 seconds
+</script>

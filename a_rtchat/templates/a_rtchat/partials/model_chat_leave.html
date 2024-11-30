@@ -1,0 +1,24 @@
+<div x-data="{ modal_open: false }">
+    <!-- Trigger -->
+    <a href="#" class="text-red-500 hover:underline" @click.prevent="modal_open = true">Leave Chatroom</a>
+
+    <!-- Modal -->
+    <div x-show="modal_open" x-cloak>
+        <!-- Overlay -->
+        <div class="fixed inset-0 bg-gray-900 bg-opacity-80 z-50" @click="modal_open = false"></div>
+
+        <!-- Modal Content -->
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-6">
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-md text-center p-6">
+                <h2 class="text-xl font-bold mb-4">Leave this Chat?</h2>
+                <p class="text-gray-600 mb-4">Are you sure you want to leave this chatroom?</p>
+
+                <form method="POST" action="{% url 'chatroom-leave' chat_group.group_name %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Yes, Leave</button>
+                </form>
+                <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded mt-2 hover:bg-gray-400" @click="modal_open = false">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

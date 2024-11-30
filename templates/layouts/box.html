@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block layout %}
+<content class="block max-w-xl mx-auto md:p-8">
+    <div class="bg-gray-100 rounded-xl shadow-lg p-6">
+        {% block content %}
+        <!-- Content will be injected here -->
+        {% endblock %}
+    </div>
+</content>
+{% endblock %}

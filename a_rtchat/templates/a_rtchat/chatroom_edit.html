@@ -1,0 +1,94 @@
+{% extends 'layouts/box.html' %}
+
+{% block content %}
+<style>
+    /* Base styling for the checkbox */
+.remove-checkbox {
+    appearance: none; /* Remove default checkbox styling */
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid black; /* Red border */
+    border-radius: 0.25rem; /* Optional rounded corners */
+    position: relative;
+    cursor: pointer;
+}
+
+/* Checked state with red cross */
+.remove-checkbox:checked {
+    background-color: #e3342f; /* Red background */
+    background-image: url('https://img.icons8.com/ios-filled/50/ffffff/multiply.png'); /* Replace with your desired red cross icon */
+    background-size: 60%; /* Adjust the size of the icon */
+    background-position: center;
+    background-repeat: no-repeat;
+    border-color: transparent; /* Hide border when checked */
+}
+
+</style>
+<h1>Edit Chat</h1>
+
+
+<div id="notification-container" class="notification" hx-swap-oob="true">
+    {{ message }}
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+
+    <div class="my-4">
+        <h2>Members</h2>
+        {% for member in chat_group.members.all %}
+        <div class="flex justify-between items-center">
+            <div class="flex items-center gap-2 py-2">
+                <img class="w-14 h-14 rounded-full object-cover" src="{{ member.profile.avatar }}" />
+                <div>
+                    <span class="font-bold">{{ member.profile.name }}</span> 
+                    <span class="text-sm font-light text-gray-600">@{{ member.username }}</span>
+                </div>
+            </div>
+            
+            {% if member != chat_group.admin %}
+            <div class="inline-block pr-4">
+                <input 
+                    type="checkbox" 
+                    name="remove_members" 
+                    value="{{ member.id }}" 
+                    class="remove-checkbox cursor-pointer w-5 h-5 rounded border-gray-300 focus:ring-red-500"
+                />
+            </div>
+            
+            {% endif %}
+        </div> 
+        {% endfor %}
+    </div>
+
+    <div class="my-4">
+        <h2>Add Members</h2>
+        {% for friend in available_friends %}
+        <div class="flex items-center gap-2 py-2">
+            <input
+                type="checkbox"
+                name="add_members"
+                value="{{ friend.id }}"
+                id="add_member_{{ friend.id }}"
+                class="cursor-pointer w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label for="add_member_{{ friend.id }}" class="text-gray-700">
+                {{ friend.profile.name }} (@{{ friend.username }})
+            </label>
+        </div>
+        {% empty %}
+            <p>No available friends to add to the group.</p>
+        {% endfor %}
+    </div>
+
+    <button class="mt-2 btn btn-primary bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded" type="submit">
+        Update
+    </button>
+</form>
+
+<a href="{% url 'chatroom-delete' chat_group.group_name %}" class="inline-block flex justify-end mt-4 text-gray-400 hover:text-red-500">
+    Delete Chatroom
+</a>
+
+{% endblock %}
