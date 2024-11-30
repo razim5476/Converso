@@ -114,24 +114,22 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'a_core.wsgi.application'
 ASGI_APPLICATION = 'a_core.asgi.application'
 
-CHANNEL_LAYERS = {
-    'default': {
-        "BACKEND" : "channels.layers.InMemoryChannelLayer",
+if ENVIRONMENT == "development":
+    
+    CHANNEL_LAYERS = {
+        'default': {
+            "BACKEND" : "channels.layers.InMemoryChannelLayer",
+        }
     }
-}
-
-
-
-# REDIS_URL = env("REDIS_URL")  # Use localhost as fallback
-
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [REDIS_URL],  # Dynamically set the Redis host
-#         },
-#     },
-# }
+else:
+     CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [(env('REDIS_URL'))],
+            },
+        },
+    }
 
 
 
@@ -234,6 +232,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'converso402@gmail.com'  # Your email address
 EMAIL_HOST_PASSWORD = 'teblsnadextqgvgt'  # Your email password
 DEFAULT_FROM_EMAIL = 'Converso'
+
 
 ZEGO_APP_ID = env('ZEGO_APP_ID', cast=int)  # Casts App ID to an integer
 ZEGO_SERVER_SECRET = env('ZEGO_SERVER_SECRET') 
