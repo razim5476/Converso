@@ -22,7 +22,7 @@ Converso is a **real-time video calling and chat web application** built with mo
 - **Backend**: Python, Django, Django Channels, Daphne
 - **Database**: MySQL
 - **WebSocket Server**: Redis
-
+- **ZEGOCLOUD UIkit**
 ---
 
 ## **📽️ Video Tutorial**
