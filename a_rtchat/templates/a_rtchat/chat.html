@@ -210,7 +210,14 @@
 
 </script>
 
-    
+<script>
+     function scrollToBottom() {
+        const container = document.getElementById('chat_container');
+        container.scrollTop = container.scrollHeight;
+     }
+     scrollToBottom()
+</script>
+
 {% endblock %}
 
 
