@@ -40,4 +40,5 @@ This project was built by following a YouTube tutorial by **Andy Jud**.
 - **Andy Jud**: For the amazing video tutorial that inspired this project.  
 - **Django Channels**: For enabling real-time WebSocket communication.  
 - **Bootstrap**: For the responsive frontend design.
+- **ChatGPT: Assisted in problem-solving, debugging, and refining features.
 
